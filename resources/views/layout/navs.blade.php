@@ -505,8 +505,8 @@
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
                   <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                    <div class="avatar avatar-online">
-                      <img src="assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                    <div class="avatar">
+                      <i class="bx bx-user-circle bx-md me-2"></i>
                     </div>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
@@ -514,8 +514,8 @@
                       <a class="dropdown-item" href="#">
                         <div class="d-flex">
                           <div class="flex-shrink-0 me-3">
-                            <div class="avatar avatar-online">
-                              <img src="assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                            <div class="avatar">
+                              <i class="bx bx-user-circle bx-md me-2"></i>
                             </div>
                           </div>
                           <div class="flex-grow-1">
@@ -640,6 +640,15 @@
           icon: alert.icon,
           title: alert.title
         });
+      })
+
+      window.addEventListener('closeoffcanvas', (event) => {
+        let offcanvasid = event.detail.offcanvas;
+        var offcanvasElement = document.getElementById(offcanvasid);
+        var offcanvasInstance = bootstrap.Offcanvas.getInstance(offcanvasElement);
+        if (offcanvasInstance) {
+            offcanvasInstance.hide();
+        }
       })
 
       // Swal.fire({

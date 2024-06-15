@@ -43,7 +43,7 @@ class UsersTable extends Component
         $this->dispatch(
             'sweetalert',
             icon: 'success',
-            title: 'Data Berhasil Ditambahkan',
+            title: 'Data User Berhasil Ditambahkan',
             position: 'top'
         );
     }
@@ -67,8 +67,13 @@ class UsersTable extends Component
         $this->dispatch(
             'sweetalert',
             icon: 'error',
-            title: 'Data Berhasil Dihapus',
+            title: 'Data User Berhasil Dihapus',
             position: 'top'
+        );
+
+        $this->dispatch(
+            'closeoffcanvas',
+            offcanvas: 'deleteUser'
         );
     }
 
@@ -98,7 +103,7 @@ class UsersTable extends Component
         $this->dispatch(
             'sweetalert',
             icon: 'warning',
-            title: 'Data Berhasil Diubah',
+            title: 'Data User Berhasil Diubah',
             position: 'top'
         );
     }

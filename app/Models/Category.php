@@ -10,4 +10,8 @@ class Category extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    public function menu(){
+        return $this->hasMany(Menu::class);
+    } 
 }
