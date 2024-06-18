@@ -13,14 +13,15 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_code');
-            $table->string('costumer_name');
+            $table->string('order_code')->unique();
+            $table->string('customer_name');
             $table->foreignId('menu_id')->references('id')->on('menus');
             $table->integer('qty');
             $table->integer('total_price');
             $table->tinyInteger('table_number');
             $table->foreignId('status_id')->references('id')->on('statuses');
-            $table->foreignId('user_id')->references('id')->on('users');
+            // field user_id tidak dibuat foreign key karena, user_id bisa dibuat 0(pesanan dibuat pelanggan)
+            $table->integer('user_id');
             $table->timestamp('order_time');
             // $table->timestamps();
         });

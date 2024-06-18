@@ -43,4 +43,8 @@ class User extends Authenticatable
     public function level(){
         return $this->belongsTo(Level::class);
     } 
+
+    public function order(){
+        return $this->hasMany(Order::class);
+    }
 }

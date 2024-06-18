@@ -13,6 +13,10 @@ class Menu extends Model
 
     public $timestamps = false;
 
+    public function order(){
+        return $this->hasMany(Order::class);
+    }
+
     public function category(){
         return $this->belongsTo(Category::class);
     }

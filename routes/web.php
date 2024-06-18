@@ -20,3 +20,7 @@ Route::get('/user', function () {
 Route::get('/menu', function () {
     return view('menus');
 });
+
+Route::get('/pesanan', function () {
+    return view('orders');
+});

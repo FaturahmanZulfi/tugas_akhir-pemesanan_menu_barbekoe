@@ -10,4 +10,8 @@ class Status extends Model
     use HasFactory;
 
     public $timestamps = false;
+
+    public function order(){
+        return $this->hasMany(Order::class);
+    }
 }

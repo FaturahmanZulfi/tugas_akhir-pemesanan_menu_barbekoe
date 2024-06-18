@@ -1,6 +1,6 @@
 <div>
     <div class="card p-3">
-        <h4 class="fw-bold card-header">Tabel User</h4>
+        <h4 class="fw-bold card-header">Tabel Menu</h4>
         <di class="row px-4">
             <div class="">
                 <button wire:click="rset()" class="col-lg-2 col-md-3 col-sm-4 btn btn-primary" type="button"
@@ -145,11 +145,11 @@
         </div>
     </div>
 
-    {{-- update user modal --}}
+    {{-- update menu modal --}}
     <div wire:ignore.self class="offcanvas offcanvas-end border-3" data-bs-scroll="true" data-bs-backdrop="false"
         tabindex="-1" id="updateMenu" aria-labelledby="offcanvasTopLabel">
         <div class="offcanvas-header">
-            <h5 id="offcanvasTopLabel" class="offcanvas-title">Ubah Data User</h5>
+            <h5 id="offcanvasTopLabel" class="offcanvas-title">Ubah Data Menu</h5>
             <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body">
@@ -222,7 +222,7 @@
         </div>
     </div>
 
-    {{-- delete user modal --}}
+    {{-- delete menu modal --}}
     <div wire:ignore.self class="offcanvas offcanvas-end border-3" data-bs-scroll="true" data-bs-backdrop="false"
         tabindex="-1" id="deleteMenu" aria-labelledby="offcanvasTopLabel">
         <div class="offcanvas-header">
