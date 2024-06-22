@@ -24,4 +24,8 @@ class Order extends Model
     public function user(){
         return $this->belongsTo(Status::class);
     }
+
+    public function withPpnOrder(){
+        return $this->belongsTo(WithPpnOrder::class, 'order_code', 'order_code');
+    }
 }

@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomerOrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +25,10 @@ Route::get('/menu', function () {
 Route::get('/pesanan', function () {
     return view('orders');
 });
+
+
+
+//customer
+Route::get('/pesan', [CustomerOrderController::class, 'index']);
+
+Route::get('/checkout/{order_code}', [CustomerOrderController::class, 'checkout'])->name('checkout');

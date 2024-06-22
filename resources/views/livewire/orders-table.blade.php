@@ -2,7 +2,12 @@
     <div class="card p-3">
         <h4 class="fw-bold card-header">Tabel Pesanan</h4>
         <di class="row px-4">
-            <div class="">
+            <div class="row mb-2">
+                <button wire:click="getPpn()" type="button" class="col-lg-2 col-md-3 col-sm-6 btn btn-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#ppnModal">
+                    Ppn : {{ $used_ppn }}%
+                </button>
+            </div>
+            <div class="row">
                 <button wire:click="rset()" class="col-lg-3 col-md-4 col-sm-5 btn btn-primary" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#createOrder">
                     Tambah Pesanan
@@ -33,7 +38,7 @@
             </div>
         </div>
         <div class="table-responsive mt-4 mx-2">
-            <table class="table table-borderless">
+            <table class="table table-borderless" wire:poll.keep-alive.100ms>
                 <thead>
                     <tr>
                         <th>Data Pelanggan</th>
@@ -52,7 +57,7 @@
                             {{ $order->table_number }}
                         </td>
                         <td>
-                            {{ $order->total_price }}
+                            {{ $order->withPpnOrder->total_price_with_ppn }}
                         </td>
                         <td>
                             {{ $order->order_time }}
@@ -74,6 +79,34 @@
             </table>
         </div>
         <div class="row px-4 mt-4">{{ $orders->links(data: ['scrollTo' => false]) }}</div>
+    </div>
+
+    {{-- update ppn modal --}}
+    <div wire:ignore.self class="offcanvas offcanvas-end border-3" data-bs-scroll="true" data-bs-backdrop="false"
+        tabindex="-1" id="ppnModal" aria-labelledby="offcanvasTopLabel">
+        <div class="offcanvas-header">
+            <h5 id="offcanvasTopLabel" class="offcanvas-title">Ubah Ppn ?</h5>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <form wire:submit="updatePpn">
+                <div class="mb-3">
+                    <label class="form-label" for="ppn">Ppn</label>
+                    <input wire:model="ppn" type="number"
+                        class="form-control @error('ppn') is-invalid @enderror" id="ppn"
+                        placeholder="Masukkan Ppn Baru" />
+                    @error('ppn')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <button type="submit" class="btn btn-dark me-2">Simpan</button>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
+                    Batal
+                </button>
+            </form>
+        </div>
     </div>
 
     {{-- insert order modal --}}
@@ -128,7 +161,11 @@
                             <div class="card-body" style="width: 100%;">
                                 <div class="row">
                                     <div class="col-1">
-                                        <input class="form-check-input" type="checkbox" id="checkbox{{ $menu->id }}" onclick="updateQty({{ $menu->id }})"/>
+                                        @if($menu->stock >= 1)
+                                            <input class="form-check-input" type="checkbox" id="checkbox{{ $menu->id }}" onclick="updateQty({{ $menu->id }})"/>
+                                        @else
+
+                                        @endif
                                     </div>
                                     <div class="col-10">
                                         <label class="form-check-label" style="display: block;" for="checkbox{{ $menu->id }}"> 
@@ -137,12 +174,16 @@
                                         </label>
                                     </div>
                                 </div>
+                                @if($menu->stock >= 1)
                                 <div class="row">
                                     <label for="qty{{ $menu->id }}" class="col-md-5 col-form-label">Qty</label>
                                     <div class="col-md-7">
                                         <input class="form-control" max="{{ $menu->stock }}" wire:model="menu_id.{{ $menu->id }}" type="number" id="qty{{ $menu->id }}" onload="updateCheckbox({{ $menu->id }}, {{ $menu->stock }})" oninput="updateCheckbox({{ $menu->id }}, {{ $menu->stock }})"/>
                                     </div>
                                 </div>
+                                @else
+
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -198,10 +239,10 @@
                 </div>
                 <div class="row">
                     <div class="row">
-                        <label class="form-label col-4">Pilih Menu</label>@error('menu_id')<span style="font-size:13px;color:#fc3f1f">{{ $message }}</span>@enderror
+                        <label class="form-label col-4">Menu</label>@error('menu_id')<span style="font-size:13px;color:#fc3f1f">{{ $message }}</span>@enderror
                     </div>
                     <div class="row mb-2">
-                        <small>Total Harga {{ $total_price }}</small>
+                        <small>Total Harga : {{ $total_price }}, Dengan Pajak {{ $used_ppn }}% : {{ $total_price_with_ppn }}</small>
                     </div>
                     <div class="row">
                     @foreach($menus as $menu)
@@ -277,7 +318,7 @@
                 </div>
                 <div class="row">
                     <div class="row">
-                        <label class="form-label col-4">Pilih Menu</label>@error('menu_id')<span style="font-size:13px;color:#fc3f1f">{{ $message }}</span>@enderror
+                        <label class="form-label col-4">Menu</label>@error('menu_id')<span style="font-size:13px;color:#fc3f1f">{{ $message }}</span>@enderror
                     </div>
                     <div class="row mb-2">
                         <small>Total Harga {{ $total_price }}</small>
@@ -307,7 +348,7 @@
                     @endforeach
                     </div>
                 </div>
-                <button type="submit" class="btn btn-primary me-2">Simpan</button>
+                <button type="submit" class="btn btn-danger me-2">Hapus</button>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="offcanvas">
                     Batal
                 </button>
@@ -356,15 +397,6 @@
                 checkbox.checked =false;
             });
         })
-
-        // window.addEventListener('hideAllMenus', (event) => {
-        //     menu_id = event.detail.menus;
-        //     console.log(menu_id);
-        //     Object.keys(menu_id).forEach(key => {
-        //         var menuCard = document.getElementById('menuCard' + menu_id[key]["id"]);
-        //         menuCard.style.display = "none";
-        //     });
-        // })
     </script>
     
 </div>

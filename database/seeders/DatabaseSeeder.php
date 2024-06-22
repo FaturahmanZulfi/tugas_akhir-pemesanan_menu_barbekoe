@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Level;
 use App\Models\Category;
+use App\Models\Ppn;
 use App\Models\Status;
 use Illuminate\Database\Seeder;
 
@@ -65,6 +66,10 @@ class DatabaseSeeder extends Seeder
 
         Level::create([
             'level' => 'Pelayan'
+        ]);
+
+        Ppn::create([
+            'ppn' => '11'
         ]);
 
         \App\Models\User::factory(100)->create();
