@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Crypt;
 use App\Models\Menu;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -22,9 +22,29 @@ class CustomerOrder extends Component
     public $customer_name;
     public $table_number;
     public $menu_id = [];
+    public $selected_menu = [];
     public $total_price;
     public $ppn;
     public $total_price_with_ppn;
+
+    public function updateCart(){
+        foreach ($this->menu_id as $key => $value) {
+            if ($value == "") {
+                $this->dispatch(
+                    'uncheckboxes',
+                    id: $key
+                );
+                unset($this->menu_id[$key]);
+                unset($this->selected_menu[$key]);
+            }
+        }
+
+        if ($this->menu_id) {
+            foreach ($this->menu_id as $menuId => $qty) {
+                $this->selected_menu[$menuId] = Menu::where('id','=',$menuId)->get()->toArray()[0];
+            }
+        }
+    }
 
     public function incrementQty($menuId){
         $this->menu_id[$menuId] = '1';
@@ -77,14 +97,36 @@ class CustomerOrder extends Component
             Menu::find($menuId)->update(['stock' => $newStock]);
         }
 
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('midtrans.serverKey');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = config('midtrans.isProduction');
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = config('midtrans.isSanitized');
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = config('midtrans.is3ds');
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => rand(),
+                'gross_amount' => $total_price_for_ppn + ($total_price_for_ppn * $ppn / 100),
+            ),
+            'customer_details' => array(
+                'first_name' => $this->customer_name,
+            )
+        );
+
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
         WithPpnOrder::create([
             'order_code' => $this->order_code,
+            'snap_token' => $snapToken,
             'total_price' => $total_price_for_ppn,
             'ppn' => $ppn.'%',
             'total_price_with_ppn' => $total_price_for_ppn + ($total_price_for_ppn * $ppn / 100)
         ]);
 
-        $this->dispatch('resetCheckBoxes', menus: $this->menu_id);
+        // $this->dispatch('resetCheckBoxes', menus: $this->menu_id);
 
         // $this->rset();
 
@@ -95,8 +137,19 @@ class CustomerOrder extends Component
             position: 'top'
         );
 
-        Cookie::queue(Cookie::make('order_code', $this->order_code, 120));
+        if(isset($_COOKIE['order_codes'])) {
+            $order_codes = Crypt::decrypt($_COOKIE['order_codes']);
+        } else {
+            $order_codes = [];
+        }
 
+        $order_codes[] = $this->order_code;
+        $order_codes = Crypt::encrypt($order_codes);
+        // time() + (24 * 60 * 60) to get 1 day time for the cookie expiration
+        $expired_time = time() + (24 * 60 * 60);
+        // "/" means the cookie can be access at all pages
+        setcookie("order_codes", $order_codes, $expired_time, "/");
+        
         return redirect()->route('checkout', ['order_code' => $this->order_code]);
     }
 

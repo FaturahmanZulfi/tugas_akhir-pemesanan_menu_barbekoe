@@ -1,0 +1,35 @@
+[33mcommit 8c8d399763f3b0cbeee6e5326f1df96696b98f23[m[33m ([m[1;36mHEAD[m[33m)[m
+Author: unknown <faturahmanzulfi008@gmail.com>
+Date:   Tue Jun 25 00:33:02 2024 +0700
+
+    add payment gateway, checkout page, and order list
+
+[33mcommit 8390e5cf81837a934dd26d7d4006b71da6ffee7f[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: unknown <faturahmanzulfi008@gmail.com>
+Date:   Sat Jun 22 23:31:59 2024 +0700
+
+    add order and checkout page for costumer
+
+[33mcommit ddd76aa50e6870dfcf02660fa745e6794906471c[m
+Author: unknown <faturahmanzulfi008@gmail.com>
+Date:   Tue Jun 18 07:06:53 2024 +0700
+
+    add order management for cashier
+
+[33mcommit f5f2e72a63617e84da1174152b7412ad66d854bb[m
+Author: unknown <faturahmanzulfi008@gmail.com>
+Date:   Sat Jun 15 14:14:15 2024 +0700
+
+    add crud for menus table
+
+[33mcommit fcd99a2e641d9a682319cfbf12329d70c73ddd19[m
+Author: unknown <faturahmanzulfi008@gmail.com>
+Date:   Fri Jun 14 23:28:05 2024 +0700
+
+    add livewire, sweeet alert, and create crud for users table
+
+[33mcommit a174aee2a658adfb7f8a08a1d734ab8448684acf[m
+Author: unknown <faturahmanzulfi008@gmail.com>
+Date:   Thu Jun 13 07:23:41 2024 +0700
+
+    laravel init

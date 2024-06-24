@@ -26,9 +26,13 @@ Route::get('/pesanan', function () {
     return view('orders');
 });
 
-
+Route::get('/disiapkan', function () {
+    return view('orders_to_prepare');
+});
 
 //customer
-Route::get('/pesan', [CustomerOrderController::class, 'index']);
+Route::get('/pesanan_saya', [CustomerOrderController::class, 'showOrderList'])->name('customer_orders');
+
+Route::get('/pesan', [CustomerOrderController::class, 'index'])->name('customer_order');
 
 Route::get('/checkout/{order_code}', [CustomerOrderController::class, 'checkout'])->name('checkout');

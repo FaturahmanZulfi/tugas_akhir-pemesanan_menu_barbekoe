@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('with_ppn_orders', function (Blueprint $table) {
             $table->id();
             $table->string('order_code')->unique();
+            $table->string('snap_token');
             $table->integer('total_price');
             $table->integer('ppn');
             $table->integer('total_price_with_ppn');
