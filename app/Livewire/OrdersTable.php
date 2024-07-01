@@ -79,7 +79,7 @@ class OrdersTable extends Component
         // dump($this->menu_id);
         
         $validated = $this->validate([
-            'customer_name' => 'required',
+            'customer_name' => 'required|max:35',
             'table_number' => 'required',
             'menu_id' => 'required'
         ]);
@@ -110,7 +110,8 @@ class OrdersTable extends Component
             'order_code' => $this->order_code,
             'total_price' => $total_price_for_ppn,
             'ppn' => $ppn.'%',
-            'total_price_with_ppn' => $total_price_for_ppn + ($total_price_for_ppn * $ppn / 100)
+            'total_price_with_ppn' => $total_price_for_ppn + ($total_price_for_ppn * $ppn / 100),
+            'status_id' => $this->status_id,
         ]);
 
         $this->dispatch('resetCheckBoxes', menus: $this->menu_id);
@@ -172,6 +173,7 @@ class OrdersTable extends Component
 
     public function updateOrder(){
         Order::where('order_code', '=', $this->order_code)->update(['status_id' => "{$this->status_id}"]);
+        WithPpnOrder::where('order_code', '=', $this->order_code)->update(['status_id' => "{$this->status_id}"]);
 
         $this->dispatch(
             'sweetalert',

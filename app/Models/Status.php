@@ -14,4 +14,8 @@ class Status extends Model
     public function order(){
         return $this->hasMany(Order::class);
     }
+
+    public function orderwithppn(){
+        return $this->hasMany(OrderWithPpn::class);
+    }
 }

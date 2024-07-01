@@ -26,6 +26,7 @@ class CustomerOrder extends Component
     public $total_price;
     public $ppn;
     public $total_price_with_ppn;
+    public $total = 0;
 
     public function updateCart(){
         foreach ($this->menu_id as $key => $value) {
@@ -40,9 +41,16 @@ class CustomerOrder extends Component
         }
 
         if ($this->menu_id) {
+            $total = 0;
             foreach ($this->menu_id as $menuId => $qty) {
+                $price = Menu::select('price')->where('id', $menuId)->get()->toArray()[0]["price"];
+                $total = $total + $price * $qty;
                 $this->selected_menu[$menuId] = Menu::where('id','=',$menuId)->get()->toArray()[0];
             }
+            $ppn = Ppn::find(1)->get()->toArray()[0]["ppn"];
+            $this->total = $total + ($total * $ppn / 100);
+        }else {
+            $this->total = 0;
         }
     }
 
@@ -70,7 +78,7 @@ class CustomerOrder extends Component
         // dump($this->menu_id);
         
         $validated = $this->validate([
-            'customer_name' => 'required',
+            'customer_name' => 'required|max:35',
             'table_number' => 'required',
             'menu_id' => 'required'
         ]);
@@ -123,7 +131,8 @@ class CustomerOrder extends Component
             'snap_token' => $snapToken,
             'total_price' => $total_price_for_ppn,
             'ppn' => $ppn.'%',
-            'total_price_with_ppn' => $total_price_for_ppn + ($total_price_for_ppn * $ppn / 100)
+            'total_price_with_ppn' => $total_price_for_ppn + ($total_price_for_ppn * $ppn / 100),
+            'status_id' => 1,
         ]);
 
         // $this->dispatch('resetCheckBoxes', menus: $this->menu_id);

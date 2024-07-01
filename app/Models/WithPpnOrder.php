@@ -16,4 +16,8 @@ class WithPpnOrder extends Model
     public function order(){
         return $this->hasMany(Order::class);
     }
+
+    public function status(){
+        return $this->belongsTo(Status::class);
+    }
 }

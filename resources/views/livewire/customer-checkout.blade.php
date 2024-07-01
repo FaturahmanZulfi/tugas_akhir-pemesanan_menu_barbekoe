@@ -25,7 +25,7 @@
             </div>
             <div class="row">
                 <span class="card-text">
-                    Status Pesanan : {{ $order_detail->status->status }}
+                    Status Pesanan : {{ $order_status }}
                 </span>
             </div>
             <div class="row">
@@ -70,10 +70,10 @@
                     {{ "Rp " . number_format($order['total_price_with_ppn'], 0, ",", ".") }}
                 </span>
             </div>
-            @if($order_detail->status->status == "Belum Dibayar")
+            @if($order_status == "Belum Dibayar")
             <button type="button" class="btn btn-primary mt-3" id="pay-button">Bayar Sekarang</button>
             @endif
-            <a href="/pesanan_saya" class="btn btn-warning mt-3">Pesanan Saya</a>
+            <a href="/pesanan-saya" class="btn btn-warning mt-3">Pesanan Saya</a>
           </div>
         </div>
       </div>

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->integer('total_price');
             $table->integer('ppn');
             $table->integer('total_price_with_ppn');
+            $table->foreignId('status_id')->references('id')->on('statuses');
             // $table->timestamps();
         });
     }

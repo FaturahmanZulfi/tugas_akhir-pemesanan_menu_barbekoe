@@ -36,7 +36,7 @@ class MenusTable extends Component
 
     public function createNewMenu(){
         $validated = $this->validate([
-            'menu' => 'required|unique:menus',
+            'menu' => 'required|unique:menus|max:50',
             'price' => 'required',
             'stock' => 'required',
             'category_id' => 'required',
@@ -103,7 +103,7 @@ class MenusTable extends Component
             ]);
         }else {
             $validated = $this->validate([
-                'menu' => 'required|unique:menus',
+                'menu' => 'required|unique:menus|max:50',
                 'price' => 'required',
                 'stock' => 'required',
                 'category_id' => 'required'

@@ -121,6 +121,7 @@ box-shadow: 3px 3px 39px -3px rgba(0,0,0,0.75);"><i class="bx bx-cart fs-4 lh-0"
                     </div>
                     @enderror
                 </div>
+                <label class="form-label" for="table_number">Total : {{ number_format($total, 0, ",", ".") }}</label>
                 <div class="row" wire:poll.keep-alive.100ms>
                     <div class="row">
                         <label class="form-label col-4">Menu</label>

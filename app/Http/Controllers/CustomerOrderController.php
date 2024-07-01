@@ -21,4 +21,8 @@ class CustomerOrderController extends Controller
     public function showOrderList(){
         return view('customer-order-list');
     }
+
+    public function scan(){
+        return view('customer-scan');
+    }
 }

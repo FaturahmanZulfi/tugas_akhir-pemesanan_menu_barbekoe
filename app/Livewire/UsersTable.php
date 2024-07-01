@@ -31,10 +31,12 @@ class UsersTable extends Component
 
     public function createNewUser(){
         $validated = $this->validate([
-            'username' => 'required|unique:users',
-            'password' => 'required',
+            'username' => 'required|unique:users|max:35',
+            'password' => 'required|max:35',
             'level_id' => 'required'
         ]);
+
+        $validated['password'] = bcrypt($this->password);
 
         User::create($validated);
 
@@ -80,18 +82,20 @@ class UsersTable extends Component
     public function updateUser(){
         if ($this->password == "") {
             $this->password = User::find($this->user_id)->password;
+        }else{
+            $this->password = bcrypt($this->password);
         }
 
         if($this->username == $this->old_username){
             $validated = $this->validate([
                 'username' => '',
-                'password' => 'required',
+                'password' => 'required|max:35',
                 'level_id' => 'required'
             ]);
         }else {
             $validated = $this->validate([
-                'username' => 'required',
-                'password' => 'required',
+                'username' => 'required|max:35',
+                'password' => 'required|max:35',
                 'level_id' => 'required'
             ]);
         }

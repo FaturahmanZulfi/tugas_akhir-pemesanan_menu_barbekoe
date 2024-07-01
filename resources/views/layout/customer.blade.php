@@ -479,7 +479,7 @@
               <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
                 <ul class="navbar-nav flex-row align-items-center ms-auto">
                   <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                    <a class="nav-link" href="/pesanan_saya"  style="font-size: 30px">
+                    <a class="nav-link" href="/pesanan-saya"  style="font-size: 30px">
                       <i class="bx bx-notepad bx-tada-hover fs-4 lh-0"></i>
                     </a>
                   </li>
@@ -582,7 +582,6 @@
 
     <!-- Vendors JS -->
     @yield('scripts')
-
 
     <!-- Page JS -->
 
