@@ -14,7 +14,7 @@ class WithPpnOrder extends Model
     protected $guarded = ['id'];
 
     public function order(){
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class, 'order_code', 'order_code');
     }
 
     public function status(){

@@ -2,16 +2,17 @@
 
 namespace App\Livewire;
 
-use Illuminate\Support\Facades\DB;
-use Livewire\Component;
-use Livewire\WithPagination;
-use App\Models\Order;
-use App\Models\Ppn;
-use App\Models\WithPpnOrder;
-use App\Models\User;
-use App\Models\Status;
-use App\Models\Menu;
 use Carbon\Carbon;
+use App\Models\Ppn;
+use App\Models\Menu;
+use App\Models\User;
+use App\Models\Order;
+use App\Models\Status;
+use Livewire\Component;
+use App\Models\WithPpnOrder;
+use Livewire\WithPagination;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrdersTable extends Component
 {
@@ -31,13 +32,19 @@ class OrdersTable extends Component
     public $ppn;
     public $total_price_with_ppn;
 
+    public $user_id;
+
+    public function mount(){
+        $this->user_id = Auth::user()->id;
+    }
+
     public function getPpn(){
         $this->ppn = Ppn::find(1)->get()->toArray()[0]["ppn"];
     }
 
     public function updatePpn(){
         $validated = $this->validate([
-            'ppn' => 'required|numeric'
+            'ppn' => 'required|numeric|max:99'
         ]);
 
         Ppn::find(1)->update($validated);
@@ -79,7 +86,7 @@ class OrdersTable extends Component
         // dump($this->menu_id);
         
         $validated = $this->validate([
-            'customer_name' => 'required|max:35',
+            'customer_name' => 'required|max:25',
             'table_number' => 'required',
             'menu_id' => 'required'
         ]);
@@ -99,7 +106,7 @@ class OrdersTable extends Component
                 'total_price' => $total_price,
                 'table_number' => $this->table_number,
                 'status_id' => $this->status_id,
-                'user_id' => 0,
+                'user_id' => $this->user_id,
                 'order_time' => $now
             ]);
             $newStock = $stock - $qty;
@@ -182,56 +189,6 @@ class OrdersTable extends Component
             position: 'top'
         );
     }
-
-    // public function deleteUser(){
-    //     User::find($this->user_id)->delete();
-
-    //     $this->rset();
-    //     $this->reset('user_id');
-
-    //     $this->dispatch(
-    //         'sweetalert',
-    //         icon: 'error',
-    //         title: 'Data User Berhasil Dihapus',
-    //         position: 'top'
-    //     );
-
-    //     $this->dispatch(
-    //         'closeoffcanvas',
-    //         offcanvas: 'deleteUser'
-    //     );
-    // }
-
-    // public function updateUser(){
-    //     if ($this->password == "") {
-    //         $this->password = User::find($this->user_id)->password;
-    //     }
-
-    //     if($this->username == $this->old_username){
-    //         $validated = $this->validate([
-    //             'username' => '',
-    //             'password' => 'required',
-    //             'level_id' => 'required'
-    //         ]);
-    //     }else {
-    //         $validated = $this->validate([
-    //             'username' => 'required',
-    //             'password' => 'required',
-    //             'level_id' => 'required'
-    //         ]);
-    //     }
-
-    //     User::find($this->user_id)->update($validated);
-
-    //     $this->reset('password');
-
-    //     $this->dispatch(
-    //         'sweetalert',
-    //         icon: 'warning',
-    //         title: 'Data User Berhasil Diubah',
-    //         position: 'top'
-    //     );
-    // }
     
     public function render()
     {   

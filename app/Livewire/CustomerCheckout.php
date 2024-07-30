@@ -7,6 +7,7 @@ use App\Models\Status;
 use Livewire\Component;
 use App\Models\WithPpnOrder;
 use Illuminate\Support\Facades\Crypt;
+use App\Http\Controllers\CustomerOrderController;
 
 class CustomerCheckout extends Component
 {
@@ -17,6 +18,10 @@ class CustomerCheckout extends Component
     public $menus;
 
     public function mount($order_code){
+        if(!isset($_COOKIE['has_user_scan'])) {
+            return redirect()->route('scan');
+        }
+
         $this->order_code = $order_code;
 
         if(isset($_COOKIE['order_codes'])) {
@@ -38,6 +43,22 @@ class CustomerCheckout extends Component
         Order::where('order_code', '=', $this->order_code)->update(['status_id' => 2]);
         WithPpnOrder::where('order_code', '=', $this->order_code)->update(['status_id' => 2]);
         return redirect()->route('checkout', ['order_code' => $this->order_code]);
+    }
+
+    public function generatePdf(){
+        $order_codes = Crypt::decrypt($_COOKIE['order_codes']);
+                $this->order = WithPpnOrder::where('order_code', '=', $this->order_code)->get()->toArray()[0];
+                $this->order_detail = Order::select('id','customer_name','status_id','order_time','table_number')->where('order_code', '=', $this->order_code)->first();
+                $this->menus = Order::with('menu')->select('menu_id','qty','total_price')->where('order_code', '=', $this->order_code)->get();
+                $this->order_status = Status::find($this->order['status_id'])->toArray()['status'];
+        
+
+        session(['order_status' => $this->order_status]);
+        session(['order' => $this->order]);
+        session(['order_detail' => $this->order_detail]);
+        session(['menus' => $this->menus]);
+        // dump($this->menus->toArray());
+        return redirect()->action([CustomerOrderController::class, 'generatePdf']);
     }
     
     public function render()

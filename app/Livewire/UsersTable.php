@@ -9,6 +9,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 // use Illuminate\Support\Facades\Validator;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
 
 class UsersTable extends Component
 {
@@ -24,6 +25,8 @@ class UsersTable extends Component
 
     public $user_id = 0;
 
+    public $usedusers;
+
     public function rset(){
         $this->reset(['username', 'password', 'level_id']);
         $this->resetValidation();
@@ -31,8 +34,8 @@ class UsersTable extends Component
 
     public function createNewUser(){
         $validated = $this->validate([
-            'username' => 'required|unique:users|max:35',
-            'password' => 'required|max:35',
+            'username' => 'required|unique:users|max:8',
+            'password' => 'required|max:8',
             'level_id' => 'required'
         ]);
 
@@ -80,24 +83,42 @@ class UsersTable extends Component
     }
 
     public function updateUser(){
-        if ($this->password == "") {
-            $this->password = User::find($this->user_id)->password;
-        }else{
-            $this->password = bcrypt($this->password);
-        }
-
         if($this->username == $this->old_username){
-            $validated = $this->validate([
-                'username' => '',
-                'password' => 'required|max:35',
-                'level_id' => 'required'
-            ]);
+            if ($this->password == "") {
+                $validated = $this->validate([
+                    'username' => '',
+                    'password' => '',
+                    'level_id' => 'required'
+                ]);
+
+                $validated['password'] = User::find($this->user_id)->password;
+            }else {
+                $validated = $this->validate([
+                    'username' => '',
+                    'password' => 'required|max:8',
+                    'level_id' => 'required'
+                ]);
+
+                $validated['password'] = bcrypt($validated['password']);
+            }
         }else {
-            $validated = $this->validate([
-                'username' => 'required|max:35',
-                'password' => 'required|max:35',
-                'level_id' => 'required'
-            ]);
+            if ($this->password == "") {
+                $validated = $this->validate([
+                    'username' => 'required|max:8',
+                    'password' => '',
+                    'level_id' => 'required'
+                ]);
+
+                $validated['password'] = User::find($this->user_id)->password;
+            }else {
+                $validated = $this->validate([
+                    'username' => 'required|max:8',
+                    'password' => 'required|max:8',
+                    'level_id' => 'required'
+                ]);
+
+                $validated['password'] = bcrypt($validated['password']);
+            }
         }
 
         User::find($this->user_id)->update($validated);
@@ -114,6 +135,12 @@ class UsersTable extends Component
     
     public function render()
     {   
+        $useds = DB::select('SELECT DISTINCT(user_id) FROM logs');
+
+        foreach ($useds as $used) {
+            $this->usedusers[] = $used->user_id;
+        }
+
         return view('livewire.users-table', [
             'users' => User::with('level')->where('username', 'like', "%{$this->search}%")->orWhereRelation('level','level','like',"%{$this->search}%")->paginate($this->perPage),
             'levels' => Level::all()

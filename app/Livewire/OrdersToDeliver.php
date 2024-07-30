@@ -42,7 +42,7 @@ class OrdersToDeliver extends Component
         $this->dispatch(
             'sweetalert',
             icon: 'success',
-            title: 'Pesanan Siap Diantar',
+            title: 'Pesanan Sudah Diantar',
             position: 'top'
         );
     }

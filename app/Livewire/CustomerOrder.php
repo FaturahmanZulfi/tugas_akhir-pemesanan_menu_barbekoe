@@ -28,6 +28,12 @@ class CustomerOrder extends Component
     public $total_price_with_ppn;
     public $total = 0;
 
+    public function mount(){
+        if(!isset($_COOKIE['has_user_scan'])) {
+            return redirect()->route('scan');
+        }
+    }
+
     public function updateCart(){
         foreach ($this->menu_id as $key => $value) {
             if ($value == "") {
@@ -78,7 +84,7 @@ class CustomerOrder extends Component
         // dump($this->menu_id);
         
         $validated = $this->validate([
-            'customer_name' => 'required|max:35',
+            'customer_name' => 'required|max:25',
             'table_number' => 'required',
             'menu_id' => 'required'
         ]);
@@ -116,11 +122,11 @@ class CustomerOrder extends Component
 
         $params = array(
             'transaction_details' => array(
-                'order_id' => rand(),
+                'order_id' => $this->order_code,
                 'gross_amount' => $total_price_for_ppn + ($total_price_for_ppn * $ppn / 100),
             ),
             'customer_details' => array(
-                'first_name' => $this->customer_name,
+                'first_name' => $this->customer_name
             )
         );
 

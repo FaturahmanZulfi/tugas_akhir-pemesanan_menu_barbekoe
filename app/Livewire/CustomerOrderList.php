@@ -13,6 +13,10 @@ class CustomerOrderList extends Component
     public $orders_detail = [];
 
     public function mount(){
+        if(!isset($_COOKIE['has_user_scan'])) {
+            return redirect()->route('scan');
+        }
+        
         if(isset($_COOKIE['order_codes'])) {
             $order_codes = Crypt::decrypt($_COOKIE['order_codes']);
             foreach ($order_codes as $order_code) {

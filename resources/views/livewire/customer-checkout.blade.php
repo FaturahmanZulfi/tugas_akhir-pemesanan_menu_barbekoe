@@ -74,6 +74,9 @@
             <button type="button" class="btn btn-primary mt-3" id="pay-button">Bayar Sekarang</button>
             @endif
             <a href="/pesanan-saya" class="btn btn-warning mt-3">Pesanan Saya</a>
+            @if ($order_status != "Belum Dibayar")
+                <button class="btn btn-dark mt-3" wire:click="generatePdf()">Download Struk</button>
+            @endif
           </div>
         </div>
       </div>
@@ -86,16 +89,17 @@
         document.getElementById('pay-button').onclick = function(){
         // SnapToken acquired from previous step
         snap.pay("{{ $order['snap_token'] }}", {
-            // Optional
             onSuccess: function(result){
                 @this.updateStatus();
             },
             // Optional
             onPending: function(result){
-            /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                console.log(result);
+                /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
             },
             // Optional
             onError: function(result){
+                console.log(result);
             /* You may add your own js here, this is just example */ document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
             }
         });

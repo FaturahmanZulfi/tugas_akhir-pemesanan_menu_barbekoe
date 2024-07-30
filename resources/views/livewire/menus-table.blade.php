@@ -3,7 +3,7 @@
         <h4 class="fw-bold card-header">Tabel Menu</h4>
         <di class="row px-4">
             <div class="">
-                <button wire:click="rset()" class="col-lg-2 col-md-3 col-sm-4 btn btn-primary" type="button"
+                <button wire:click="rset()" class="col-lg-3 col-md-3 col-sm-4 btn btn-primary" type="button"
                     data-bs-toggle="offcanvas" data-bs-target="#createMenu">
                     Tambah Menu
                 </button>
@@ -57,10 +57,14 @@
                                 data-bs-toggle="offcanvas" data-bs-target="#updateMenu">
                                 Ubah
                             </button>
+                            @if(in_array($menu->id,$usedmenus))
+
+                            @else
                             <button wire:click="getMenu({{ $menu->id }})" class="btn btn-danger" type="button"
                                 data-bs-toggle="offcanvas" data-bs-target="#deleteMenu">
                                 Hapus
                             </button>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -268,6 +272,4 @@
             </form>
         </div>
     </div>
-
-
 </div>

@@ -33,7 +33,7 @@
             <div class="col-lg-3 col-md-4 offset-lg-3 offset-md-2">
                 <div class="input-group input-group-merge">
                     <span class="input-group-text" id="basic-addon-search31"><i class="bx bx-search"></i></span>
-                    <input wire:model.live="search" type="text" class="form-control" placeholder="Cari User"/>
+                    <input wire:model.live="search" type="text" class="form-control" placeholder="Cari Pesanan"/>
                 </div>
             </div>
         </div>

@@ -25,4 +25,23 @@ class CustomerOrderController extends Controller
     public function scan(){
         return view('customer-scan');
     }
+
+    public function generatePdf(){
+        $order_status = session('order_status');
+        $order = session('order');
+        $order_detail = session('order_detail');
+        $menus = session('menus');
+
+        $mpdf = new \Mpdf\Mpdf(['format' => [120, 236]]);
+        $mpdf->WriteHTML(
+            view('pdf', [
+                "order_status" => $order_status,
+                "order" => $order,
+                "order_detail" => $order_detail,
+                "menus" => $menus
+            ])
+        );
+
+        $mpdf->Output('Struk-Belanja-BarbeKoe.pdf','D');
+    }
 }

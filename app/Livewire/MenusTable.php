@@ -4,11 +4,13 @@ namespace App\Livewire;
 
 use Livewire\Rule;
 use App\Models\Menu;
-use App\Models\Category;
+use App\Models\Order;
 use Livewire\Component;
+use App\Models\Category;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
 use Livewire\Attributes\Validate;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class MenusTable extends Component
@@ -20,6 +22,7 @@ class MenusTable extends Component
     public $search = '';
 
     public $menu;
+    public $usedmenus =[];
     public $old_menu;
     public $price;
     public $picture;
@@ -83,7 +86,7 @@ class MenusTable extends Component
         $this->dispatch(
             'sweetalert',
             icon: 'error',
-            title: 'Data Berhasil Dihapus',
+            title: 'Menu Berhasil Dihapus',
             position: 'top'
         );
 
@@ -131,6 +134,12 @@ class MenusTable extends Component
     
     public function render()
     {   
+        $useds = DB::select('SELECT DISTINCT(menu_id) FROM orders');
+
+        foreach ($useds as $used) {
+            $this->usedmenus[] = $used->menu_id;
+        }
+
         return view('livewire.menus-table', [
             'menus' => Menu::with('category')->where('menu', 'like', "%{$this->search}%")->orWhereRelation('category','category','like',"%{$this->search}%")->paginate($this->perPage),
             'categories' => Category::all()

@@ -3,9 +3,10 @@
 namespace App\Livewire;
 
 use App\Models\Order;
-use App\Models\WithPpnOrder;
 use Livewire\Component;
+use App\Models\WithPpnOrder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrdersToPrepare extends Component
 {
@@ -14,6 +15,14 @@ class OrdersToPrepare extends Component
     public $menus = [];
 
     public $category = "minuman";
+
+    public function mount(){
+        if(Auth::user()->level_id == 4){
+            $this->category = "minuman";
+        }else{
+            $this->category = "makanan";
+        }
+    }
 
     public function getOrder($order_code){
         $this->order_code = $order_code;

@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('levels', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->enum('level', ['Admin', 'Pemilik', 'Kasir', 'Barista', 'Koki', 'Pelayan']);
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->string('action');
+            $table->timestamp('time')->useCurrent();
             // $table->timestamps();
         });
     }
@@ -23,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('levels');
+        Schema::dropIfExists('logs');
     }
 };

@@ -51,10 +51,14 @@
                                 data-bs-target="#updateUser">
                                 Ubah
                             </button>
+                            @if(in_array($user->id,$usedusers))
+
+                            @else
                             <button wire:click="getUser({{ $user->id }})" class="btn btn-danger" type="button" data-bs-toggle="offcanvas"
                                 data-bs-target="#deleteUser">
                                 Hapus
                             </button>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
