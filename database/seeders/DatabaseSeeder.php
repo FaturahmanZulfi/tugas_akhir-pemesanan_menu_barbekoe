@@ -86,7 +86,7 @@ class DatabaseSeeder extends Seeder
         // \App\Models\User::factory(100)->create();
 
         User::create([
-            'username' => 'test',
+            'username' => 'admin',
             'password' => bcrypt('admin'),
             'level_id' => '1'
         ]);
